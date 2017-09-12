@@ -96,10 +96,12 @@ function isPHP($version = "'7.0.0'") {
 function modRewriteEnabled() {
     if (!function_exists('apache_get_modules')) {
         ob_start();
-        phpinfo(INFO_MODULES);
-        $contents = ob_get_contents();
-        ob_end_clean();
-        return (strpos($contents, 'mod_rewrite') !== false);
+        #phpinfo(INFO_MODULES);
+        #$contents = ob_get_contents();
+	    ob_end_clean();
+	    #tested on Fedora, should work for RedHat and CentOS
+	    return (strpos(shell_exec('/usr/sbin/httpd -M'), 'rewrite_module') !== false);
+        #return (strpos($contents, 'mod_rewrite') !== false);
     } else {
         return in_array('mod_rewrite', apache_get_modules());
     }
